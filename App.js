@@ -1,21 +1,87 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import Courses from './Screens/Courses';
+import Detail from './Screens/Detail';
+import Schedule from './Screens/Schedule';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+const HomeStack = createStackNavigator(
+  {
+    Home: {
+      screen: Courses,
+      navigationOptions: { title: 'Courses' },
+    },
+    Detail: {
+      screen: Detail,
+      navigationOptions: { title: 'Detail' },
+    },
+  }
+);
+
+const TableStack = createStackNavigator(
+  {
+    Schedule: {
+      screen: Schedule,
+      navigationOptions: { title: 'Schedule' },
+    }
+  }
+);
+
+const Tabs = createBottomTabNavigator(
+  {
+    Courses: HomeStack,
+    Schedule: TableStack,
+  },
+  {
+    initialRouteName: 'Courses',
+    defaultNavigationOptions: ({ navigation }) => ({
+
+      tabBarIcon: ({ horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+
+        let iconName;
+        if (routeName === 'Courses') {
+          //iconName = `ios-list`;
+          iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-list`;
+        } else if (routeName === 'Schedule') {
+          //iconName = `ios-calendar`;
+          iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-calendar`;
+        }
+        return (
+          <>
+            <Ionicons name={iconName}
+              size={horizontal ? 30 : 30}
+              color={tintColor}
+            />
+          </>
+        );
+      },
+      tabBarOptions: {
+        backgroundFeaturedIcon: '#Cf3838',
+        activeTintColor: '#Cf3838',
+        inactiveTintColor: '#E1E3DB',
+        style: {
+          paddingTop: 10,
+          paddingBottom: 10,
+          height: 45,
+          backgroundColor: '#FFFFFF',
+          borderTopWidth: 1,
+          borderTopColor: '#F2F3EF'
+        },
+      },
+    }),
+  }
+);
+
+const AppContainer = createAppContainer(Tabs);
+
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
