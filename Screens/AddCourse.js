@@ -53,10 +53,10 @@ export default function AddCourse({ navigation }) {
 
   const [courseList, setList] = useState([])
 
-  const storeData = async () => {
+  const storeData = async course => {
     try {
-      await AsyncStorage.setItem('CourseList', JSON.stringify(courseList))
-      alert('Have to press add course twice then reload the home page to see change')
+      await AsyncStorage.setItem('CourseList', JSON.stringify(courseList.concat(course)))
+      alert('Have to reload the home page to see changes')
     } catch (e) {
       alert('Failed to save the data to the storage')
     }
@@ -92,7 +92,7 @@ export default function AddCourse({ navigation }) {
     }
 
     setList(courseList.concat(course))
-    storeData(courseList)
+    storeData(course)
   }
 
   return (
