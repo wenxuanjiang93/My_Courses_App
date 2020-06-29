@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Courses from './Screens/Courses';
+import AddCourse from './Screens/AddCourse';
 import Detail from './Screens/Detail';
 import Schedule from './Screens/Schedule';
 
@@ -22,6 +23,15 @@ const HomeStack = createStackNavigator(
   }
 );
 
+const AddStack = createStackNavigator(
+  {
+    AddCourse: {
+      screen: AddCourse,
+      navigationOptions: { title: 'Add Course' },
+    },
+  }
+);
+
 const TableStack = createStackNavigator(
   {
     Schedule: {
@@ -34,6 +44,7 @@ const TableStack = createStackNavigator(
 const Tabs = createBottomTabNavigator(
   {
     Courses: HomeStack,
+    Add: AddStack,
     Schedule: TableStack,
   },
   {
@@ -47,6 +58,9 @@ const Tabs = createBottomTabNavigator(
         if (routeName === 'Courses') {
           //iconName = `ios-list`;
           iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-list`;
+        } else if (routeName === 'Add') {
+          //iconName = `ios-add`;
+          iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-add`;
         } else if (routeName === 'Schedule') {
           //iconName = `ios-calendar`;
           iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-calendar`;
@@ -61,7 +75,6 @@ const Tabs = createBottomTabNavigator(
         );
       },
       tabBarOptions: {
-        backgroundFeaturedIcon: '#Cf3838',
         activeTintColor: '#Cf3838',
         inactiveTintColor: '#E1E3DB',
         style: {
