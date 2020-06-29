@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, FlatList } from 'react-native';
+import { Text, View, Button, FlatList } from 'react-native';
 // import data from '../assets/data';
 import { useAsyncStorage } from '@react-native-community/async-storage';
+import styled from 'styled-components/native';
+
+
+const ListWrapper = styled(FlatList)`
+  margin-vertical: 5%;
+`;
 
 export default function Courses({ navigation }) {
 
@@ -30,17 +36,21 @@ export default function Courses({ navigation }) {
 
 function Item({ course }) {
   return (
-    <View>
+    <View style={{ margin: 20 }}>
       <Text>{course.id} - {course.title}</Text>
       <Text>Instructor: {course.instructor} </Text>
       <Text>Location: {course.location} </Text>
+      <Text>Days: {course.day.map((d) => d + " ")} </Text>
+      <Text>Start Time: {course.startTimeHr} : {course.startTimeMin} </Text>
+      <Text>End Time: {course.endTimeHr} : {course.endTimeMin} </Text>
+
     </View>
   );
 }
 
 function CourseList({ data }) {
   return (
-    <FlatList
+    <ListWrapper
       data={data}
       renderItem={({ item }) =>
         <Item course={item} />

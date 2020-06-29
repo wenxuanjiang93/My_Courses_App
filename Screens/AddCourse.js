@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Text, View, ScrollView, Button, TextInput, FlatList } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 import styled from 'styled-components/native';
-// import AsyncStorage from '@react-native-community/async-storage';
-import { useAsyncStorage } from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const ScrollWrapper = styled(ScrollView)`
-  margin-vertical: 5%;
+  background-color: #fff;
 `;
 
 const FormWrapper = styled(View)`
-  margin-horizontal: 10%;
+
+  margin: 10%;
   background-color: #fff;
   align-items: stretch;
   justify-content: center;
@@ -40,55 +41,41 @@ const InputBox = styled(TextInput)`
 
 export default function AddCourse({ navigation }) {
 
-  const [courseList, setList] = useState([])
-  const { getItem, setItem } = useAsyncStorage('CourseList');
-
-  const getData = async () => {
-    const item = await getItem();
-    setList(JSON.parse(item) || courseList);
-  };
-
-  const storeData = async newList => {
-    await setItem(JSON.stringify(newList)).then(Alert.alert("Course Added"));
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const addCourseToList = (course) => {
-    setList(courseList.concat(course))
-    storeData(courseList)
-  }
-
-  // const storeData = async (value) => {
-  //   try {
-  //     await AsyncStorage.setItem('CourseList', JSON.stringify(value))
-  //     Alert.alert("Course Added")
-  //   } catch (e) {
-  //     Alert.alert("Error")
-  //   }
-  // }
-
-
-  return (
-    <View>
-      <AddCourseForm addCourseToList={addCourseToList} />
-    </View>
-  );
-}
-
-function AddCourseForm({ addCourseToList }) {
-
   const [id, setID] = useState("");
   const [title, setTitle] = useState("");
   const [instructor, setProf] = useState("");
   const [location, setLoc] = useState("");
   const [day, setDay] = useState([]);
-  const [startTimeHr, setStartHr] = useState(0);
-  const [startTimeMin, setStartMin] = useState(0);
-  const [endTimeHr, setEndHr] = useState(0);
-  const [endTimeMin, setEndMin] = useState(0);
+  const [startTimeHr, setStartHr] = useState("");
+  const [startTimeMin, setStartMin] = useState("");
+  const [endTimeHr, setEndHr] = useState("");
+  const [endTimeMin, setEndMin] = useState("");
+
+  const [courseList, setList] = useState([])
+
+  const storeData = async () => {
+    try {
+      await AsyncStorage.setItem('CourseList', JSON.stringify(courseList))
+      alert('Have to press add course twice then reload the home page to see change')
+    } catch (e) {
+      alert('Failed to save the data to the storage')
+    }
+  }
+
+  const getData = async () => {
+    try {
+      const courseList = await AsyncStorage.getItem('CourseList')
+      if (courseList !== null) {
+        setList(JSON.parse(courseList))
+      }
+    } catch (e) {
+      alert('Failed to fetch the data from storage')
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const handleForm = () => {
     const course = {
@@ -104,7 +91,8 @@ function AddCourseForm({ addCourseToList }) {
       selected: true,
     }
 
-    addCourseToList(course)
+    setList(courseList.concat(course))
+    storeData(courseList)
   }
 
   return (
@@ -143,7 +131,7 @@ function AddCourseForm({ addCourseToList }) {
           <LabelText>Day:</LabelText>
           <MultiSelect
             hideTags
-            items={[{ id: "1", name: "MON" }, { id: "2", name: "TUE" }, { id: "3", name: "WED" }, { id: "4", name: "THU" }, { id: "5", name: "FRI" }]}
+            items={[{ id: "MON", name: "MON" }, { id: "TUE", name: "TUE" }, { id: "WED", name: "WED" }, { id: "THU", name: "THU" }, { id: "FRI", name: "FRI" }]}
             uniqueKey="id"
             selectedItems={day}
             onSelectedItemsChange={(selectedDays) => setDay(selectedDays)}
@@ -155,35 +143,39 @@ function AddCourseForm({ addCourseToList }) {
         <InputWrapper>
           <LabelText>Start time:</LabelText>
           <View style={{ flexDirection: 'row' }}>
-            <TextInput
-              style={{ borderColor: 'black', borderWidth: 1, width: 100 }}
+            <InputBox
+              style={{ width: 50 }}
               keyboardType="numeric"
               maxLength={2}
-              onChangeText={text => setStartHr(parseInt(text))}
+              onChangeText={text => setStartHr(text)}
             />
-            <TextInput
-              style={{ borderColor: 'black', borderWidth: 1, width: 100 }}
+            <Text style={{ fontSize: 30 }}> : </Text>
+            <InputBox
+              style={{ width: 50 }}
               keyboardType="numeric"
               maxLength={2}
-              onChangeText={text => setStartMin(parseInt(text))}
+              onChangeText={text => setStartMin(text)}
             />
           </View>
         </InputWrapper>
 
         <InputWrapper>
           <LabelText>End time:</LabelText>
-          <TextInput
-            style={{ borderColor: 'black', borderWidth: 1, width: 100 }}
-            keyboardType="numeric"
-            maxLength={2}
-            onChangeText={text => setEndHr(parseInt(text))}
-          />
-          <TextInput
-            style={{ borderColor: 'black', borderWidth: 1, width: 100 }}
-            keyboardType="numeric"
-            maxLength={2}
-            onChangeText={text => setEndMin(parseInt(text))}
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <InputBox
+              style={{ width: 50 }}
+              keyboardType="numeric"
+              maxLength={2}
+              onChangeText={text => setEndHr(text)}
+            />
+            <Text style={{ fontSize: 30 }}> : </Text>
+            <InputBox
+              style={{ width: 50 }}
+              keyboardType="numeric"
+              maxLength={2}
+              onChangeText={text => setEndMin(text)}
+            />
+          </View>
         </InputWrapper>
 
         <InputWrapper>

@@ -6,8 +6,6 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Courses from './Screens/Courses';
 import AddCourse from './Screens/AddCourse';
-import Detail from './Screens/Detail';
-import Schedule from './Screens/Schedule';
 
 
 const HomeStack = createStackNavigator(
@@ -15,10 +13,6 @@ const HomeStack = createStackNavigator(
     Home: {
       screen: Courses,
       navigationOptions: { title: 'Courses' },
-    },
-    Detail: {
-      screen: Detail,
-      navigationOptions: { title: 'Detail' },
     },
   }
 );
@@ -32,20 +26,10 @@ const AddStack = createStackNavigator(
   }
 );
 
-const TableStack = createStackNavigator(
-  {
-    Schedule: {
-      screen: Schedule,
-      navigationOptions: { title: 'Schedule' },
-    }
-  }
-);
-
 const Tabs = createBottomTabNavigator(
   {
     Courses: HomeStack,
     Add: AddStack,
-    Schedule: TableStack,
   },
   {
     initialRouteName: 'Courses',
@@ -56,15 +40,11 @@ const Tabs = createBottomTabNavigator(
 
         let iconName;
         if (routeName === 'Courses') {
-          //iconName = `ios-list`;
           iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-list`;
         } else if (routeName === 'Add') {
-          //iconName = `ios-add`;
           iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-add`;
-        } else if (routeName === 'Schedule') {
-          //iconName = `ios-calendar`;
-          iconName = `${Platform.OS === 'ios' ? 'ios' : 'md'}-calendar`;
         }
+
         return (
           <>
             <Ionicons name={iconName}
@@ -80,7 +60,7 @@ const Tabs = createBottomTabNavigator(
         style: {
           paddingTop: 10,
           paddingBottom: 10,
-          height: 45,
+          height: 60,
           backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
           borderTopColor: '#F2F3EF'
