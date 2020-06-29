@@ -53,6 +53,7 @@ export default function AddCourse({ navigation }) {
 
   const [courseList, setList] = useState([])
 
+
   const storeData = async course => {
     try {
       await AsyncStorage.setItem('CourseList', JSON.stringify(courseList.concat(course)))
@@ -77,6 +78,18 @@ export default function AddCourse({ navigation }) {
     getData();
   }, []);
 
+  const resetForm = () => {
+    setID("");
+    setTitle("");
+    setProf("");
+    setLoc("");
+    setDay([]);
+    setStartHr("");
+    setStartMin("");
+    setEndHr("");
+    setEndMin("");
+  }
+
   const handleForm = () => {
     const course = {
       id: id,
@@ -93,6 +106,8 @@ export default function AddCourse({ navigation }) {
 
     setList(courseList.concat(course))
     storeData(course)
+    resetForm()
+    navigation.navigate("Courses")
   }
 
   return (
@@ -102,6 +117,7 @@ export default function AddCourse({ navigation }) {
           <LabelText>Course ID:</LabelText>
           <InputBox
             maxLength={10}
+            value={id}
             onChangeText={text => setID(text)}
           />
         </InputWrapper>
@@ -109,6 +125,7 @@ export default function AddCourse({ navigation }) {
         <InputWrapper>
           <LabelText>Course Title:</LabelText>
           <InputBox
+            value={title}
             onChangeText={text => setTitle(text)}
           />
         </InputWrapper>
@@ -116,6 +133,7 @@ export default function AddCourse({ navigation }) {
         <InputWrapper>
           <LabelText>Instructor:</LabelText>
           <InputBox
+            value={instructor}
             onChangeText={text => setProf(text)}
           />
         </InputWrapper>
@@ -123,6 +141,7 @@ export default function AddCourse({ navigation }) {
         <InputWrapper>
           <LabelText>Location:</LabelText>
           <InputBox
+            value={location}
             onChangeText={text => setLoc(text)}
           />
         </InputWrapper>
@@ -147,6 +166,7 @@ export default function AddCourse({ navigation }) {
               style={{ width: 50 }}
               keyboardType="numeric"
               maxLength={2}
+              value={startTimeHr}
               onChangeText={text => setStartHr(text)}
             />
             <Text style={{ fontSize: 30 }}> : </Text>
@@ -154,6 +174,7 @@ export default function AddCourse({ navigation }) {
               style={{ width: 50 }}
               keyboardType="numeric"
               maxLength={2}
+              value={startTimeMin}
               onChangeText={text => setStartMin(text)}
             />
           </View>
@@ -166,6 +187,7 @@ export default function AddCourse({ navigation }) {
               style={{ width: 50 }}
               keyboardType="numeric"
               maxLength={2}
+              value={endTimeHr}
               onChangeText={text => setEndHr(text)}
             />
             <Text style={{ fontSize: 30 }}> : </Text>
@@ -173,6 +195,7 @@ export default function AddCourse({ navigation }) {
               style={{ width: 50 }}
               keyboardType="numeric"
               maxLength={2}
+              value={endTimeMin}
               onChangeText={text => setEndMin(text)}
             />
           </View>
